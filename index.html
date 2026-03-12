@@ -3,197 +3,125 @@
 <html lang="pt-br">
 
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>COHAB CITY</title>
+<title>Casa x Buteco</title>
 
 <style>
 
-:root{
---laranja:#d3734a;
---verde:#3d5a45;
---bege:#f4e8d1;
-}
-
 body{
-background:#fdf5e6;
+margin:0;
+background:#b7b19f;
+font-family:Arial, Helvetica, sans-serif;
 display:flex;
 flex-direction:column;
 align-items:center;
-font-family:Segoe UI;
-margin:0;
 }
 
-/* HUD */
+/* TITULOS */
 
-.hud{
-margin:10px;
-padding:10px 20px;
-background:white;
-border-radius:10px;
-box-shadow:0 5px 10px rgba(0,0,0,.2);
-}
-
-/* WRAPPER PARA ESCALA */
-
-.board-wrapper{
-width:100vw;
-height:100vh;
-display:flex;
-align-items:center;
-justify-content:center;
-overflow:hidden;
+.header,.footer{
+background:#e5e5e5;
+padding:15px 120px;
+border-radius:40px;
+font-size:40px;
+letter-spacing:10px;
+color:#8a7c2b;
+margin:20px;
 }
 
 /* TABULEIRO */
 
 .board{
-display:grid;
-grid-template-columns:repeat(11,80px);
-grid-template-rows:repeat(7,80px);
-gap:5px;
-background:#e0d2bc;
-padding:10px;
-border-radius:10px;
-transform-origin:center center;
+position:relative;
+width:900px;
+height:900px;
 }
 
 /* CASAS */
 
-.case{
-background:white;
-border-radius:4px;
+.tile{
+position:absolute;
+width:70px;
+height:70px;
+background:#efefef;
+border-radius:50%;
 display:flex;
 align-items:center;
 justify-content:center;
-font-size:10px;
+font-size:24px;
+color:#8a7c2b;
 font-weight:bold;
-text-align:center;
-position:relative;
-padding:4px;
 }
 
-.laranja{border-top:8px solid var(--laranja);}
-.verde{border-top:8px solid var(--verde);}
-.especial{background:#fdfdfd;}
+.big{
+width:140px;
+height:140px;
+font-size:36px;
+color:white;
+background:transparent;
+border:4px solid white;
+flex-direction:column;
+}
 
-/* JOGADORES */
+/* jogadores */
 
-.player-container{
+.players{
 position:absolute;
 bottom:2px;
-left:2px;
-right:2px;
-display:grid;
-grid-template-columns:repeat(3,1fr);
+display:flex;
 gap:2px;
+flex-wrap:wrap;
+justify-content:center;
+width:100%;
 }
 
 .player{
-width:16px;
-height:16px;
+width:14px;
+height:14px;
 border-radius:50%;
 border:2px solid white;
 }
 
-/* CENTRO */
-
-.center{
-grid-column:2/11;
-grid-row:2/7;
-background:var(--bege);
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-border-radius:8px;
-border:2px dashed var(--laranja);
-}
-
-.logo{
-font-size:42px;
-color:var(--laranja);
-font-weight:900;
-margin-bottom:15px;
-}
-
-/* DADO */
+/* dado */
 
 .dice-container{
-perspective:600px;
+margin-top:20px;
+perspective:800px;
 cursor:pointer;
 }
 
 .dice{
-width:60px;
-height:60px;
+width:70px;
+height:70px;
 position:relative;
 transform-style:preserve-3d;
-transition:transform 1s ease-out;
+transition:transform 1s;
 }
 
 .face{
 position:absolute;
-width:60px;
-height:60px;
+width:70px;
+height:70px;
 background:white;
 border:2px solid #ccc;
 border-radius:10px;
 display:flex;
-justify-content:center;
 align-items:center;
-font-size:24px;
+justify-content:center;
+font-size:30px;
 font-weight:bold;
 }
 
-.front{transform:translateZ(30px);}
-.back{transform:rotateY(180deg) translateZ(30px);}
-.right{transform:rotateY(90deg) translateZ(30px);}
-.left{transform:rotateY(-90deg) translateZ(30px);}
-.top{transform:rotateX(90deg) translateZ(30px);}
-.bottom{transform:rotateX(-90deg) translateZ(30px);}
+.front{transform:translateZ(35px);}
+.back{transform:rotateY(180deg) translateZ(35px);}
+.right{transform:rotateY(90deg) translateZ(35px);}
+.left{transform:rotateY(-90deg) translateZ(35px);}
+.top{transform:rotateX(90deg) translateZ(35px);}
+.bottom{transform:rotateX(-90deg) translateZ(35px);}
 
-/* POSIÇÕES TABULEIRO */
-
-.pos-0{grid-area:7/1}
-.pos-1{grid-area:6/1}
-.pos-2{grid-area:5/1}
-.pos-3{grid-area:4/1}
-.pos-4{grid-area:3/1}
-.pos-5{grid-area:2/1}
-.pos-6{grid-area:1/1}
-
-.pos-7{grid-area:1/2}
-.pos-8{grid-area:1/3}
-.pos-9{grid-area:1/4}
-.pos-10{grid-area:1/5}
-.pos-11{grid-area:1/6}
-.pos-12{grid-area:1/7}
-.pos-13{grid-area:1/8}
-.pos-14{grid-area:1/9}
-.pos-15{grid-area:1/10}
-.pos-16{grid-area:1/11}
-
-.pos-17{grid-area:2/11}
-.pos-18{grid-area:3/11}
-.pos-19{grid-area:4/11}
-.pos-20{grid-area:5/11}
-.pos-21{grid-area:6/11}
-
-.pos-22{grid-area:7/11}
-.pos-23{grid-area:7/10}
-.pos-24{grid-area:7/9}
-.pos-25{grid-area:7/8}
-.pos-26{grid-area:7/7}
-.pos-27{grid-area:7/6}
-.pos-28{grid-area:7/5}
-.pos-29{grid-area:7/4}
-.pos-30{grid-area:7/3}
-.pos-31{grid-area:7/2}
-
-/* MODAL */
+/* modal */
 
 .modal{
 position:fixed;
@@ -201,7 +129,7 @@ top:0;
 left:0;
 width:100%;
 height:100%;
-background:rgba(0,0,0,.7);
+background:rgba(0,0,0,.6);
 display:flex;
 align-items:center;
 justify-content:center;
@@ -212,28 +140,18 @@ background:white;
 padding:30px;
 border-radius:10px;
 text-align:center;
-animation:pop .3s ease;
-}
-
-@keyframes pop{
-0%{transform:scale(.5);opacity:0}
-100%{transform:scale(1);opacity:1}
 }
 
 </style>
-
 </head>
 
 <body>
 
-<div class="hud" id="hud"></div>
+<div class="header">CASA</div>
 
-<div class="board-wrapper">
-<div class="board">
+<div class="board" id="board"></div>
 
-<div class="center">
-
-<div class="logo">COHAB CITY</div>
+<div class="footer">BUTECO</div>
 
 <div class="dice-container" onclick="rollDice()">
 
@@ -247,17 +165,11 @@ animation:pop .3s ease;
 <div class="face bottom">5</div>
 
 </div>
-
 </div>
 
-<div id="result">Clique no dado</div>
+<div id="hud"></div>
 
-</div>
-
-</div>
-</div>
-
-<!-- MODAL JOGADORES -->
+<!-- modal jogadores -->
 
 <div class="modal" id="playerModal">
 
@@ -280,14 +192,13 @@ animation:pop .3s ease;
 
 </div>
 
-<!-- MODAL CARTA -->
+<!-- carta -->
 
 <div class="modal" id="cardModal" style="display:none">
 
 <div class="modal-box">
 
 <h2>Sorte ou Azar</h2>
-
 <p id="cardText"></p>
 
 <button onclick="closeCard()">Continuar</button>
@@ -298,59 +209,96 @@ animation:pop .3s ease;
 
 <script>
 
-/* CRIAR TABULEIRO */
+/* POSIÇÕES DO TABULEIRO (layout imagem) */
 
-const board=document.querySelector(".board")
-
-const tiles=[
-"Início","Sorte","Gráfica","Farmácia","Sorte","Escola","Polícia",
-"Trailer","Padaria","Pizzaria","Correios","Adega","Sorte","Feira","Salão","Lava Rápido","Sorte",
-"Sanarinho","Parque","Marley","Barufs","Alphaville",
-"Uber","BMX","Atacadão","Viação","Sorte","Shopping","KM21","Academia","Sorte","Fim"
+const positions=[
+[50,120],
+[200,120],
+[300,140],
+[400,160],
+[520,120],
+[640,150],
+[750,200],
+[620,260],
+[500,300],
+[360,250],
+[260,300],
+[150,260],
+[80,320],
+[120,420],
+[220,470],
+[320,420],
+[420,450],
+[520,500],
+[650,450],
+[760,420],
+[720,520],
+[580,600],
+[450,620],
+[320,600],
+[200,570],
+[100,600],
+[200,700],
+[320,740],
+[450,760],
+[600,720],
+[750,650]
 ]
 
-tiles.forEach((t,i)=>{
+const sorte=[10,13,20,24,29]
 
-let d=document.createElement("div")
+const board=document.getElementById("board")
 
-d.className="case pos-"+i
+positions.forEach((p,i)=>{
 
-if(t=="Sorte")d.classList.add("verde")
-else if(t=="Início"||t=="Fim")d.classList.add("especial")
-else d.classList.add("laranja")
+let tile=document.createElement("div")
 
-d.innerHTML=t+"<div class='player-container'></div>"
+tile.className="tile"
+tile.style.left=p[0]+"px"
+tile.style.top=p[1]+"px"
 
-board.appendChild(d)
+if(i==0){
 
-})
-
-/* AUTO SCALE */
-
-function autoScaleBoard(){
-
-const board=document.querySelector(".board")
-
-const boardWidth=11*80+60
-const boardHeight=7*80+60
-
-const scaleX=window.innerWidth/boardWidth
-const scaleY=window.innerHeight/boardHeight
-
-const scale=Math.min(scaleX,scaleY)
-
-board.style.transform="scale("+scale+")"
+tile.classList.add("big")
+tile.innerHTML="1<br>INÍCIO"
 
 }
 
-window.addEventListener("load",autoScaleBoard)
-window.addEventListener("resize",autoScaleBoard)
+else if(i==30){
 
-/* JOGO */
+tile.classList.add("big")
+tile.innerHTML="31<br>FIM"
+
+}
+
+else if(sorte.includes(i+1)){
+
+tile.classList.add("big")
+tile.innerHTML=(i+1)+"<br>SORTE"
+
+}
+
+else{
+
+tile.innerHTML=i+1
+
+}
+
+let players=document.createElement("div")
+players.className="players"
+
+tile.appendChild(players)
+
+board.appendChild(tile)
+
+})
+
+/* jogo */
 
 let players=[]
 let pos=[]
 let turn=0
+let pending=0
 
 const cards=[
 {txt:"Avance 2 casas",move:2},
@@ -359,22 +307,20 @@ const cards=[
 {txt:"Volte 3 casas",move:-3}
 ]
 
-let pendingMove=0
+function addPlayer(c){
 
-function addPlayer(color){
-
-if(players.includes(color))return
 if(players.length>=6)return
+if(players.includes(c))return
 
-players.push(color)
+players.push(c)
 pos.push(0)
 
-let p=document.createElement("div")
-p.className="player"
-p.style.background=color
-p.id="p"+color
+let token=document.createElement("div")
+token.className="player"
+token.style.background=c
+token.id="p"+c
 
-document.querySelector(".pos-0 .player-container").appendChild(p)
+document.querySelectorAll(".players")[0].appendChild(token)
 
 }
 
@@ -396,39 +342,39 @@ document.getElementById("hud").innerText="Jogador: "+players[turn]
 
 function rollDice(){
 
-const dice=document.getElementById('dice')
+const dice=document.getElementById("dice")
 const result=Math.floor(Math.random()*6)+1
 
-const xRand=Math.floor(Math.random()*3+4)*360
-const yRand=Math.floor(Math.random()*3+4)*360
+const rx=(Math.floor(Math.random()*4)+4)*360
+const ry=(Math.floor(Math.random()*4)+4)*360
 
-let xFinal=0,yFinal=0
+let x=0,y=0
 
 switch(result){
 
-case 1:xFinal=0;yFinal=0;break
-case 6:xFinal=0;yFinal=180;break
-case 3:xFinal=0;yFinal=-90;break
-case 4:xFinal=0;yFinal=90;break
-case 2:xFinal=-90;yFinal=0;break
-case 5:xFinal=90;yFinal=0;break
+case 1:x=0;y=0;break
+case 6:x=0;y=180;break
+case 3:x=0;y=-90;break
+case 4:x=0;y=90;break
+case 2:x=-90;y=0;break
+case 5:x=90;y=0;break
 
 }
 
-dice.style.transform=`rotateX(${xRand+xFinal}deg) rotateY(${yRand+yFinal}deg)`
+dice.style.transform=`rotateX(${rx+x}deg) rotateY(${ry+y}deg)`
 
 setTimeout(()=>{
 
-pendingMove=result
-stepMove()
+pending=result
+moveStep()
 
 },1000)
 
 }
 
-function stepMove(){
+function moveStep(){
 
-if(pendingMove<=0){
+if(pending<=0){
 
 tileAction()
 return
@@ -436,23 +382,27 @@ return
 }
 
 pos[turn]++
-pendingMove--
+pending--
 
-if(pos[turn]>31)pos[turn]=31
+if(pos[turn]>30)pos[turn]=30
+
+updateToken()
+
+setTimeout(moveStep,300)
+
+}
+
+function updateToken(){
 
 let token=document.getElementById("p"+players[turn])
 
-document.querySelector(".pos-"+pos[turn]+" .player-container").appendChild(token)
-
-setTimeout(stepMove,300)
+document.querySelectorAll(".players")[pos[turn]].appendChild(token)
 
 }
 
 function tileAction(){
 
-let tile=document.querySelector(".pos-"+pos[turn])
-
-if(tile.classList.contains("verde")){
+if(sorte.includes(pos[turn]+1)){
 
 drawCard()
 return
@@ -471,7 +421,7 @@ document.getElementById("cardText").innerText=c.txt
 
 document.getElementById("cardModal").style.display="flex"
 
-pendingMove=c.move
+pending=c.move
 
 }
 
@@ -479,36 +429,43 @@ function closeCard(){
 
 document.getElementById("cardModal").style.display="none"
 
-if(pendingMove>0)stepMove()
-else if(pendingMove<0){
+if(pending>0)moveStep()
 
-pendingMove=Math.abs(pendingMove)
-stepBack()
+else if(pending<0){
 
-}else nextTurn()
+pending=Math.abs(pending)
+moveBack()
 
 }
 
-function stepBack(){
+else nextTurn()
 
-if(pendingMove<=0){nextTurn();return}
+}
+
+function moveBack(){
+
+if(pending<=0){
+
+nextTurn()
+return
+
+}
 
 pos[turn]--
-pendingMove--
+pending--
 
-let token=document.getElementById("p"+players[turn])
+updateToken()
 
-document.querySelector(".pos-"+pos[turn]+" .player-container").appendChild(token)
-
-setTimeout(stepBack,300)
+setTimeout(moveBack,300)
 
 }
 
 function checkWin(){
 
-if(pos[turn]==31){
+if(pos[turn]==30){
 
 alert("🏆 "+players[turn]+" venceu!")
+
 location.reload()
 
 }
