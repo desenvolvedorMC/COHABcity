@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -9,10 +10,9 @@
 <title>COHAB CITY</title>
 
 <style>
-    
-    /* ============================= */
+
 /* MOBILE RESPONSIVE LAYOUT */
-/* ============================= */
+
 
 @media (max-width:900px){
 
@@ -577,6 +577,30 @@ document.querySelector(".pos-"+pos[turn]+" .player-container").appendChild(token
 setTimeout(stepMoveBack,300)
 
 }
+
+
+
+function ajustarZoomTabuleiro(){
+
+const board=document.querySelector(".board")
+
+const larguraTela=window.innerWidth
+
+const larguraTabuleiro=11*80+60 // casas + gaps + padding
+
+let escala=larguraTela/larguraTabuleiro
+
+if(escala>1)escala=1
+
+board.style.transform="scale("+escala+")"
+
+board.style.transformOrigin="top center"
+
+}
+
+window.addEventListener("load",ajustarZoomTabuleiro)
+
+window.addEventListener("resize",ajustarZoomTabuleiro)
 
 </script>
 
