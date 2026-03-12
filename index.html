@@ -1,114 +1,14 @@
-
+```html
 <!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>COHAB CITY</title>
 
 <style>
-
-/* MOBILE RESPONSIVE LAYOUT */
-
-
-@media (max-width:900px){
-
-.board{
-
-transform:scale(.75);
-transform-origin:top center;
-
-}
-
-.logo{
-
-font-size:32px;
-
-}
-
-.dice{
-
-width:70px;
-height:70px;
-
-}
-
-.face{
-
-width:70px;
-height:70px;
-font-size:26px;
-
-}
-
-.front{transform:translateZ(35px);}
-.back{transform:rotateY(180deg) translateZ(35px);}
-.right{transform:rotateY(90deg) translateZ(35px);}
-.left{transform:rotateY(-90deg) translateZ(35px);}
-.top{transform:rotateX(90deg) translateZ(35px);}
-.bottom{transform:rotateX(-90deg) translateZ(35px);}
-
-.player{
-
-width:18px;
-height:18px;
-
-}
-
-}
-
-@media (max-width:600px){
-
-.board{
-
-transform:scale(.55);
-
-}
-
-.logo{
-
-font-size:26px;
-
-}
-
-.dice{
-
-width:80px;
-height:80px;
-
-}
-
-.face{
-
-width:80px;
-height:80px;
-font-size:28px;
-
-}
-
-.front{transform:translateZ(40px);}
-.back{transform:rotateY(180deg) translateZ(40px);}
-.right{transform:rotateY(90deg) translateZ(40px);}
-.left{transform:rotateY(-90deg) translateZ(40px);}
-.top{transform:rotateX(90deg) translateZ(40px);}
-.bottom{transform:rotateX(-90deg) translateZ(40px);}
-
-.hud{
-
-font-size:18px;
-
-}
-
-.modal-box{
-
-width:90%;
-
-}
-
-}
 
 :root{
 --laranja:#d3734a;
@@ -125,6 +25,8 @@ font-family:Segoe UI;
 margin:0;
 }
 
+/* HUD */
+
 .hud{
 margin:15px;
 padding:10px 20px;
@@ -132,6 +34,19 @@ background:white;
 border-radius:10px;
 box-shadow:0 5px 10px rgba(0,0,0,.2);
 }
+
+/* WRAPPER PARA ESCALA */
+
+.board-wrapper{
+width:100vw;
+height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+overflow:hidden;
+}
+
+/* TABULEIRO */
 
 .board{
 display:grid;
@@ -141,7 +56,10 @@ gap:5px;
 background:#e0d2bc;
 padding:10px;
 border-radius:10px;
+transform-origin:center center;
 }
+
+/* CASAS */
 
 .case{
 background:white;
@@ -160,6 +78,8 @@ padding:4px;
 .verde{border-top:8px solid var(--verde);}
 .especial{background:#fdfdfd;}
 
+/* JOGADORES */
+
 .player-container{
 position:absolute;
 bottom:2px;
@@ -176,6 +96,8 @@ height:16px;
 border-radius:50%;
 border:2px solid white;
 }
+
+/* CENTRO */
 
 .center{
 grid-column:2/11;
@@ -195,6 +117,8 @@ color:var(--laranja);
 font-weight:900;
 margin-bottom:15px;
 }
+
+/* DADO */
 
 .dice-container{
 perspective:600px;
@@ -235,6 +159,8 @@ margin-top:10px;
 font-weight:bold;
 }
 
+/* POSIÇÕES DO TABULEIRO */
+
 .pos-0{grid-area:7/1}
 .pos-1{grid-area:6/1}
 .pos-2{grid-area:5/1}
@@ -271,6 +197,8 @@ font-weight:bold;
 .pos-30{grid-area:7/3}
 .pos-31{grid-area:7/2}
 
+/* MODAIS */
+
 .modal{
 position:fixed;
 top:0;
@@ -288,22 +216,16 @@ background:white;
 padding:30px;
 border-radius:10px;
 text-align:center;
-animation:cardPop .4s ease;
-}
-
-@keyframes cardPop{
-0%{transform:scale(.5);opacity:0;}
-100%{transform:scale(1);opacity:1;}
 }
 
 </style>
-
 </head>
 
 <body>
 
 <div class="hud" id="hud"></div>
 
+<div class="board-wrapper">
 <div class="board">
 
 <div class="center">
@@ -322,7 +244,6 @@ animation:cardPop .4s ease;
 <div class="face bottom">5</div>
 
 </div>
-
 </div>
 
 <div id="result">Clique no dado</div>
@@ -330,43 +251,11 @@ animation:cardPop .4s ease;
 </div>
 
 </div>
-
-<div class="modal" id="playerModal">
-
-<div class="modal-box">
-
-<h2>Escolha jogadores</h2>
-
-<button onclick="addPlayer('red')">🔴</button>
-<button onclick="addPlayer('blue')">🔵</button>
-<button onclick="addPlayer('yellow')">🟡</button>
-<button onclick="addPlayer('black')">⚫</button>
-<button onclick="addPlayer('pink')">🩷</button>
-<button onclick="addPlayer('green')">🟢</button>
-
-<br><br>
-
-<button onclick="startGame()">Começar</button>
-
-</div>
-
-</div>
-
-<div class="modal" id="cardModal" style="display:none">
-
-<div class="modal-box">
-
-<h2>Sorte ou Azar</h2>
-
-<p id="cardText"></p>
-
-<button onclick="closeCard()">Continuar</button>
-
-</div>
-
 </div>
 
 <script>
+
+/* CRIAR CASAS */
 
 const board=document.querySelector(".board")
 
@@ -393,18 +282,32 @@ board.appendChild(d)
 
 })
 
+/* AUTO ESCALA MATEMÁTICA */
+
+function autoScaleBoard(){
+
+const board=document.querySelector(".board")
+
+const boardWidth=11*80+60
+const boardHeight=7*80+60
+
+const scaleX=window.innerWidth/boardWidth
+const scaleY=window.innerHeight/boardHeight
+
+const scale=Math.min(scaleX,scaleY)
+
+board.style.transform="scale("+scale+")"
+
+}
+
+window.addEventListener("load",autoScaleBoard)
+window.addEventListener("resize",autoScaleBoard)
+
+/* JOGO */
+
 let players=[]
 let pos=[]
 let turn=0
-
-const cards=[
-{txt:"Avance 2 casas",move:2},
-{txt:"Volte 2 casas",move:-2},
-{txt:"Avance 3 casas",move:3},
-{txt:"Volte 3 casas",move:-3}
-]
-
-let pendingMove=0
 
 function addPlayer(color){
 
@@ -421,8 +324,6 @@ document.querySelector(".pos-0 .player-container").appendChild(p)
 }
 
 function startGame(){
-
-document.getElementById("playerModal").style.display="none"
 
 updateHUD()
 
@@ -459,8 +360,7 @@ dice.style.transform=`rotateX(${xRand+xFinal}deg) rotateY(${yRand+yFinal}deg)`
 
 setTimeout(()=>{
 
-pendingMove=result
-stepMove()
+move(result)
 
 document.getElementById("result").innerText="Você tirou "+result
 
@@ -468,141 +368,36 @@ document.getElementById("result").innerText="Você tirou "+result
 
 }
 
-function stepMove(){
+function move(n){
 
-if(pendingMove<=0){
-
-tileAction()
-
-return
-
-}
-
-pos[turn]++
-pendingMove--
+pos[turn]+=n
 
 if(pos[turn]>31)pos[turn]=31
 
 let color=players[turn]
+
 let token=document.getElementById("p"+color)
 
 document.querySelector(".pos-"+pos[turn]+" .player-container").appendChild(token)
 
-setTimeout(stepMove,300)
-
-}
-
-function tileAction(){
-
-let tile=document.querySelector(".pos-"+pos[turn])
-
-if(tile.classList.contains("verde")){
-
-drawCard()
-return
-
-}
-
 if(pos[turn]==31){
 
-alert("🏆 "+players[turn]+" venceu!")
+alert("🏆 "+color+" venceu!")
+
 location.reload()
 
 }
 
 turn++
+
 if(turn>=players.length)turn=0
 
 updateHUD()
 
 }
-
-function drawCard(){
-
-let c=cards[Math.floor(Math.random()*cards.length)]
-
-document.getElementById("cardText").innerText=c.txt
-
-document.getElementById("cardModal").style.display="flex"
-
-pendingMove=c.move
-
-}
-
-function closeCard(){
-
-document.getElementById("cardModal").style.display="none"
-
-if(pendingMove>0){
-
-stepMove()
-
-}else if(pendingMove<0){
-
-pendingMove=Math.abs(pendingMove)
-stepMoveBack()
-
-}else{
-
-turn++
-if(turn>=players.length)turn=0
-
-updateHUD()
-
-}
-
-}
-
-function stepMoveBack(){
-
-if(pendingMove<=0){
-
-turn++
-if(turn>=players.length)turn=0
-
-updateHUD()
-
-return
-
-}
-
-pos[turn]--
-pendingMove--
-
-let color=players[turn]
-let token=document.getElementById("p"+color)
-
-document.querySelector(".pos-"+pos[turn]+" .player-container").appendChild(token)
-
-setTimeout(stepMoveBack,300)
-
-}
-
-
-
-function ajustarZoomTabuleiro(){
-
-const board=document.querySelector(".board")
-
-const larguraTela=window.innerWidth
-
-const larguraTabuleiro=11*80+60 // casas + gaps + padding
-
-let escala=larguraTela/larguraTabuleiro
-
-if(escala>1)escala=1
-
-board.style.transform="scale("+escala+")"
-
-board.style.transformOrigin="top center"
-
-}
-
-window.addEventListener("load",ajustarZoomTabuleiro)
-
-window.addEventListener("resize",ajustarZoomTabuleiro)
 
 </script>
 
 </body>
 </html>
+```
