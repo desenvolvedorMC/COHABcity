@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COHAB CITY - O Jogo</title>
+    <style>
+        :root {
+            --cor-laranja: #d3734a;
+            --cor-verde: #3d5a45;
+            --cor-bege: #f4e8d1;
+            --cor-texto: #4a2c1d;
+        }
+
+        body {
+            background-color: #fdf5e6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Estrutura do Tabuleiro */
+        .board {
+            display: grid;
+            grid-template-columns: repeat(11, 80px);
+            grid-template-rows: repeat(7, 80px);
+            gap: 5px;
+            background: #e0d2bc;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        /* Estilo das Casas */
+        .case {
+            background: white;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 5px;
+            font-size: 10px;
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+            text-transform: uppercase;
+        }
+
+        .case:hover {
+            transform: scale(1.1);
+            z-index: 10;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .laranja { border-top: 8px solid var(--cor-laranja); }
+        .verde { border-top: 8px solid var(--cor-verde); }
+        .especial { background: #fdfdfd; }
+
+        /* Centro do Tabuleiro */
+        .center-area {
+            grid-column: 2 / 11;
+            grid-row: 2 / 7;
+            background: var(--cor-bege);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            position: relative;
+            border: 2px dashed var(--cor-laranja);
+        }
+
+        .logo {
+            font-size: 48px;
+            color: var(--cor-laranja);
+            margin-bottom: 20px;
+            font-weight: 900;
+            letter-spacing: -2px;
+        }
+
+        /* O DADO */
+        .dice-container {
+            perspective: 600px;
+            cursor: pointer;
+        }
+
+        .dice {
+            width: 60px;
+            height: 60px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 1s ease-out;
+        }
+
+        .face {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: white;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .front  { transform: translateZ(30px); }
+        .back   { transform: rotateY(180deg) translateZ(30px); }
+        .right  { transform: rotateY(90deg) translateZ(30px); }
+        .left   { transform: rotateY(-90deg) translateZ(30px); }
+        .top    { transform: rotateX(90deg) translateZ(30px); }
+        .bottom { transform: rotateX(-90deg) translateZ(30px); }
+
+        #result-text {
+            margin-top: 15px;
+            font-size: 18px;
+            color: var(--cor-verde);
+            font-weight: bold;
+            height: 25px;
+        }
+
+        /* Posicionamento dos itens específicos baseados na imagem */
+        .pos-0 { grid-area: 7 / 1; } /* Inicio */
+        .pos-1 { grid-area: 6 / 1; } .pos-2 { grid-area: 5 / 1; }
+        .pos-3 { grid-area: 4 / 1; } .pos-4 { grid-area: 3 / 1; }
+        .pos-5 { grid-area: 2 / 1; } .pos-6 { grid-area: 1 / 1; }
+        .pos-7 { grid-area: 1 / 2; } .pos-8 { grid-area: 1 / 3; }
+        .pos-9 { grid-area: 1 / 4; } .pos-10 { grid-area: 1 / 5; }
+        .pos-11 { grid-area: 1 / 6; } .pos-12 { grid-area: 1 / 7; }
+        .pos-13 { grid-area: 1 / 8; } .pos-14 { grid-area: 1 / 9; }
+        .pos-15 { grid-area: 1 / 10; } .pos-16 { grid-area: 1 / 11; }
+        .pos-17 { grid-area: 2 / 11; } .pos-18 { grid-area: 3 / 11; }
+        .pos-19 { grid-area: 4 / 11; } .pos-20 { grid-area: 5 / 11; }
+        .pos-21 { grid-area: 6 / 11; } .pos-22 { grid-area: 7 / 11; }
+        .pos-23 { grid-area: 7 / 10; } .pos-24 { grid-area: 7 / 9; }
+        .pos-25 { grid-area: 7 / 8; } .pos-26 { grid-area: 7 / 7; }
+        .pos-27 { grid-area: 7 / 6; } .pos-28 { grid-area: 7 / 5; }
+        .pos-29 { grid-area: 7 / 4; } .pos-30 { grid-area: 7 / 3; }
+        .pos-31 { grid-area: 7 / 2; }
+    </style>
+</head>
+<body>
+
+    <div class="board">
+        <div class="center-area">
+            <div class="logo">COHAB CITY</div>
+            <div class="dice-container" onclick="rollDice()">
+                <div class="dice" id="dice">
+                    <div class="face front">1</div>
+                    <div class="face back">6</div>
+                    <div class="face right">3</div>
+                    <div class="face left">4</div>
+                    <div class="face top">2</div>
+                    <div class="face bottom">5</div>
+                </div>
+            </div>
+            <div id="result-text">Clique no dado</div>
+        </div>
+
+        <div class="case especial pos-0">Início</div>
+        <div class="case verde pos-1">Sorte ou Azar</div>
+        <div class="case laranja pos-2">Gráfica ASV</div>
+        <div class="case laranja pos-3">Farmácia</div>
+        <div class="case verde pos-4">Sorte ou Azar</div>
+        <div class="case laranja pos-5">EE Andrei Sakharov</div>
+        <div class="case laranja pos-6">Polícia Militar</div>
+        
+        <div class="case laranja pos-7">Trailer do Marrom</div>
+        <div class="case laranja pos-8">Padaria Carolina</div>
+        <div class="case laranja pos-9">Pizzaria Dorats</div>
+        <div class="case laranja pos-10">Correios</div>
+        <div class="case laranja pos-11">Adega</div>
+        <div class="case verde pos-12">Sorte ou Azar</div>
+        <div class="case laranja pos-13">Feira da Rua</div>
+        <div class="case laranja pos-14">Salão de Beleza</div>
+        <div class="case laranja pos-15">Lava Rápido</div>
+        <div class="case verde pos-16">Sorte ou Azar</div>
+
+        <div class="case laranja pos-17">Sanarinho</div>
+        <div class="case laranja pos-18">Parque dos Paturis</div>
+        <div class="case laranja pos-19">Biqueira do Marley</div>
+        <div class="case laranja pos-20">Lanchonete Baruf's</div>
+        <div class="case laranja pos-21">Alphaville</div>
+        
+        <div class="case laranja pos-22">Uber</div>
+        <div class="case laranja pos-23">Pista BMX</div>
+        <div class="case laranja pos-24">Atacadão</div>
+        <div class="case laranja pos-25">Viação Puerinha</div>
+        <div class="case verde pos-26">Sorte ou Azar</div>
+        <div class="case laranja pos-27">Shopping Carapicuíba</div>
+        <div class="case laranja pos-28">Estação KM21</div>
+        <div class="case laranja pos-29">Academia</div>
+        <div class="case verde pos-30">Sorte ou Azar</div>
+        <div class="case especial pos-31">Regras</div>
+    </div>
+
+    <script>
+        function rollDice() {
+            const dice = document.getElementById('dice');
+            const resultText = document.getElementById('result-text');
+            
+            // Gerar número aleatório entre 1 e 6
+            const result = Math.floor(Math.random() * 6) + 1;
+            
+            // Rotações aleatórias para efeito visual de giro
+            const xRand = Math.floor(Math.random() * 3 + 4) * 360;
+            const yRand = Math.floor(Math.random() * 3 + 4) * 360;
+
+            // Define a rotação final baseada no número sorteado
+            let xFinal = 0, yFinal = 0;
+            switch(result) {
+                case 1: xFinal = 0; yFinal = 0; break;
+                case 6: xFinal = 0; yFinal = 180; break;
+                case 3: xFinal = 0; yFinal = -90; break;
+                case 4: xFinal = 0; yFinal = 90; break;
+                case 2: xFinal = -90; yFinal = 0; break;
+                case 5: xFinal = 90; yFinal = 0; break;
+            }
+
+            dice.style.transform = `rotateX(${xRand + xFinal}deg) rotateY(${yRand + yFinal}deg)`;
+            
+            resultText.innerText = "Girando...";
+            
+            setTimeout(() => {
+                resultText.innerText = `Você tirou: ${result}!`;
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
