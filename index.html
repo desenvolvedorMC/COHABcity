@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -10,6 +9,106 @@
 <title>COHAB CITY</title>
 
 <style>
+    
+    /* ============================= */
+/* MOBILE RESPONSIVE LAYOUT */
+/* ============================= */
+
+@media (max-width:900px){
+
+.board{
+
+transform:scale(.75);
+transform-origin:top center;
+
+}
+
+.logo{
+
+font-size:32px;
+
+}
+
+.dice{
+
+width:70px;
+height:70px;
+
+}
+
+.face{
+
+width:70px;
+height:70px;
+font-size:26px;
+
+}
+
+.front{transform:translateZ(35px);}
+.back{transform:rotateY(180deg) translateZ(35px);}
+.right{transform:rotateY(90deg) translateZ(35px);}
+.left{transform:rotateY(-90deg) translateZ(35px);}
+.top{transform:rotateX(90deg) translateZ(35px);}
+.bottom{transform:rotateX(-90deg) translateZ(35px);}
+
+.player{
+
+width:18px;
+height:18px;
+
+}
+
+}
+
+@media (max-width:600px){
+
+.board{
+
+transform:scale(.55);
+
+}
+
+.logo{
+
+font-size:26px;
+
+}
+
+.dice{
+
+width:80px;
+height:80px;
+
+}
+
+.face{
+
+width:80px;
+height:80px;
+font-size:28px;
+
+}
+
+.front{transform:translateZ(40px);}
+.back{transform:rotateY(180deg) translateZ(40px);}
+.right{transform:rotateY(90deg) translateZ(40px);}
+.left{transform:rotateY(-90deg) translateZ(40px);}
+.top{transform:rotateX(90deg) translateZ(40px);}
+.bottom{transform:rotateX(-90deg) translateZ(40px);}
+
+.hud{
+
+font-size:18px;
+
+}
+
+.modal-box{
+
+width:90%;
+
+}
+
+}
 
 :root{
 --laranja:#d3734a;
