@@ -1,7 +1,9 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -27,7 +29,7 @@ margin:0;
 /* HUD */
 
 .hud{
-margin:15px;
+margin:10px;
 padding:10px 20px;
 background:white;
 border-radius:10px;
@@ -153,12 +155,7 @@ font-weight:bold;
 .top{transform:rotateX(90deg) translateZ(30px);}
 .bottom{transform:rotateX(-90deg) translateZ(30px);}
 
-#result{
-margin-top:10px;
-font-weight:bold;
-}
-
-/* POSIÇÕES DO TABULEIRO */
+/* POSIÇÕES TABULEIRO */
 
 .pos-0{grid-area:7/1}
 .pos-1{grid-area:6/1}
@@ -196,7 +193,7 @@ font-weight:bold;
 .pos-30{grid-area:7/3}
 .pos-31{grid-area:7/2}
 
-/* MODAIS */
+/* MODAL */
 
 .modal{
 position:fixed;
@@ -215,9 +212,16 @@ background:white;
 padding:30px;
 border-radius:10px;
 text-align:center;
+animation:pop .3s ease;
+}
+
+@keyframes pop{
+0%{transform:scale(.5);opacity:0}
+100%{transform:scale(1);opacity:1}
 }
 
 </style>
+
 </head>
 
 <body>
@@ -243,6 +247,7 @@ text-align:center;
 <div class="face bottom">5</div>
 
 </div>
+
 </div>
 
 <div id="result">Clique no dado</div>
@@ -252,9 +257,48 @@ text-align:center;
 </div>
 </div>
 
+<!-- MODAL JOGADORES -->
+
+<div class="modal" id="playerModal">
+
+<div class="modal-box">
+
+<h2>Escolha jogadores</h2>
+
+<button onclick="addPlayer('red')">🔴</button>
+<button onclick="addPlayer('blue')">🔵</button>
+<button onclick="addPlayer('yellow')">🟡</button>
+<button onclick="addPlayer('black')">⚫</button>
+<button onclick="addPlayer('pink')">🩷</button>
+<button onclick="addPlayer('green')">🟢</button>
+
+<br><br>
+
+<button onclick="startGame()">Começar</button>
+
+</div>
+
+</div>
+
+<!-- MODAL CARTA -->
+
+<div class="modal" id="cardModal" style="display:none">
+
+<div class="modal-box">
+
+<h2>Sorte ou Azar</h2>
+
+<p id="cardText"></p>
+
+<button onclick="closeCard()">Continuar</button>
+
+</div>
+
+</div>
+
 <script>
 
-/* CRIAR CASAS */
+/* CRIAR TABULEIRO */
 
 const board=document.querySelector(".board")
 
@@ -281,7 +325,7 @@ board.appendChild(d)
 
 })
 
-/* AUTO ESCALA MATEMÁTICA */
+/* AUTO SCALE */
 
 function autoScaleBoard(){
 
@@ -308,7 +352,19 @@ let players=[]
 let pos=[]
 let turn=0
 
+const cards=[
+{txt:"Avance 2 casas",move:2},
+{txt:"Volte 2 casas",move:-2},
+{txt:"Avance 3 casas",move:3},
+{txt:"Volte 3 casas",move:-3}
+]
+
+let pendingMove=0
+
 function addPlayer(color){
+
+if(players.includes(color))return
+if(players.length>=6)return
 
 players.push(color)
 pos.push(0)
@@ -323,6 +379,10 @@ document.querySelector(".pos-0 .player-container").appendChild(p)
 }
 
 function startGame(){
+
+if(players.length==0)return
+
+document.getElementById("playerModal").style.display="none"
 
 updateHUD()
 
@@ -359,33 +419,105 @@ dice.style.transform=`rotateX(${xRand+xFinal}deg) rotateY(${yRand+yFinal}deg)`
 
 setTimeout(()=>{
 
-move(result)
-
-document.getElementById("result").innerText="Você tirou "+result
+pendingMove=result
+stepMove()
 
 },1000)
 
 }
 
-function move(n){
+function stepMove(){
 
-pos[turn]+=n
+if(pendingMove<=0){
+
+tileAction()
+return
+
+}
+
+pos[turn]++
+pendingMove--
 
 if(pos[turn]>31)pos[turn]=31
 
-let color=players[turn]
-
-let token=document.getElementById("p"+color)
+let token=document.getElementById("p"+players[turn])
 
 document.querySelector(".pos-"+pos[turn]+" .player-container").appendChild(token)
 
+setTimeout(stepMove,300)
+
+}
+
+function tileAction(){
+
+let tile=document.querySelector(".pos-"+pos[turn])
+
+if(tile.classList.contains("verde")){
+
+drawCard()
+return
+
+}
+
+checkWin()
+
+}
+
+function drawCard(){
+
+let c=cards[Math.floor(Math.random()*cards.length)]
+
+document.getElementById("cardText").innerText=c.txt
+
+document.getElementById("cardModal").style.display="flex"
+
+pendingMove=c.move
+
+}
+
+function closeCard(){
+
+document.getElementById("cardModal").style.display="none"
+
+if(pendingMove>0)stepMove()
+else if(pendingMove<0){
+
+pendingMove=Math.abs(pendingMove)
+stepBack()
+
+}else nextTurn()
+
+}
+
+function stepBack(){
+
+if(pendingMove<=0){nextTurn();return}
+
+pos[turn]--
+pendingMove--
+
+let token=document.getElementById("p"+players[turn])
+
+document.querySelector(".pos-"+pos[turn]+" .player-container").appendChild(token)
+
+setTimeout(stepBack,300)
+
+}
+
+function checkWin(){
+
 if(pos[turn]==31){
 
-alert("🏆 "+color+" venceu!")
-
+alert("🏆 "+players[turn]+" venceu!")
 location.reload()
 
 }
+
+nextTurn()
+
+}
+
+function nextTurn(){
 
 turn++
 
