@@ -221,6 +221,45 @@ animation:pop .3s ease;
 100%{transform:scale(1);opacity:1}
 }
 
+
+/* alinhamento dentro dos cards*/
+.case{
+display:flex;
+flex-direction:column;
+align-items:flex-start;
+justify-content:flex-start;
+text-align:left;
+padding:4px;
+font-size:10px;
+font-weight:bold;
+}
+
+/* nome do card centralizado */
+
+.card-title{
+width:100%;
+text-align:center;
+font-weight:bold;
+margin-bottom:4px;
+}
+
+/* área das informações */
+
+.card-info{
+display:flex;
+flex-direction:column;
+align-items:flex-start;
+gap:2px;
+width:100%;
+}
+
+/* garante alinhamento esquerdo */
+
+.card-info div{
+text-align:left;
+width:100%;
+}
+
 </style>
 
 </head>
@@ -300,59 +339,163 @@ animation:pop .3s ease;
 
 <script>
 
-/* TABULEIRO COM CLASSIFICAÇÃO */
+/* TABULEIRO COM CLASSIFICAÇÃO E VALORES */
 
 const tiles=[
 
 {name:"Início",type:"inicio"},
 
-{name:"Sorte",type:"sorte"},
-{name:"Gráfica",type:"empresa"},
-{name:"Farmácia",type:"empresa"},
-{name:"Sorte",type:"sorte"},
-{name:"Escola",type:"empresa"},
-{name:"Polícia",type:"companhia"},
-{name:"Trailer",type:"empresa"},
-{name:"Padaria",type:"empresa"},
-{name:"Pizzaria",type:"empresa"},
-{name:"Correios",type:"companhia"},
-{name:"Adega",type:"empresa"},
-{name:"Sorte",type:"sorte"},
-{name:"Feira",type:"empresa"},
-{name:"Salão",type:"empresa"},
-{name:"Lava Rápido",type:"empresa"},
-{name:"Sorte",type:"sorte"},
-{name:"Sanatorinho",type:"empresa"},
-{name:"Parque",type:"empresa"},
-{name:"Marley",type:"companhia"},
-{name:"Sorte",type:"sorte"},
-{name:"Alphaville",type:"empresa"},
-{name:"Uber",type:"companhia"},
-{name:"BMX",type:"empresa"},
-{name:"Atacadão",type:"empresa"},
-{name:"Viação",type:"companhia"},
-{name:"Sorte",type:"sorte"},
-{name:"Shopping",type:"empresa"},
-{name:"KM21",type:"companhia"},
-{name:"Academia",type:"empresa"},
-{name:"Sorte",type:"sorte"},
-{name:"Fim",type:"sorte"}
+{name:"Sorte ou Azar",type:"sorte"},
+{name:"Gráfica ASV",type:"empresa",valor:170},
+{name:"Farmácia",type:"empresa",valor:180},
+{name:"Sorte ou Azar",type:"sorte"},
+{name:"EE Sakharov",type:"empresa",valor:190},
+{name:"PM",type:"companhia",valor:500},
+{name:"Marrom",type:"empresa",valor:115},
+{name:"Padaria",type:"empresa",valor:210},
+{name:"Pizzaria",type:"empresa",valor:90},
+{name:"Correios",type:"companhia",valor:280},
+{name:"Adega",type:"empresa",valor:135},
+{name:"Sorte ou Azar",type:"sorte"},
+{name:"Feira",type:"empresa",valor:300},
+{name:"Salão",type:"empresa",valor:100},
+{name:"Lava Rápido",type:"empresa",valor:80},
+{name:"Sorte ou Azar",type:"sorte"},
+{name:"Sanatorinho",type:"empresa",valor:200},
+{name:"Paturis",type:"empresa",valor:210},
+{name:"Biqueira",type:"companhia",valor:500},
+{name:"Sorte ou Azar",type:"sorte"},
+{name:"Alphaville",type:"empresa",valor:350},
+{name:"Uber",type:"companhia",valor:310},
+{name:"BMX",type:"empresa",valor:152},
+{name:"Atacadão",type:"empresa",valor:265},
+{name:"Via Puerinha",type:"companhia",valor:270},
+{name:"Sorte ou Azar",type:"sorte"},
+{name:"Shopping",type:"empresa",valor:310},
+{name:"Estação KM21",type:"companhia",valor:295},
+{name:"Academia",type:"empresa",valor:250},
+{name:"Sorte ou Azar",type:"sorte"},
+{name:"Lotérica",type:"empresa",valor:154}
 
 ]
 
+/* ESTADO DOS CARDS */
+
+const cardState = tiles.map(t=>({
+dono:"",
+peao:0
+}))
+
 const board=document.querySelector(".board")
 
+/* CRIAÇÃO DOS CARDS */
+
 tiles.forEach((t,i)=>{
+
+let extra=""
+
+if(t.type==="empresa"){
+
+extra=`
+<div class="card-info">
+<div>$ ${t.valor}</div>
+<div class="dono">DONO: -</div>
+<div class="peao">PEÃO: 0</div>
+</div>
+`
+
+}
+
+if(t.type==="companhia"){
+
+extra=`
+<div class="card-info">
+<div>$ ${t.valor}</div>
+<div class="dono">DONO: -</div>
+</div>
+`
+
+}
 
 let d=document.createElement("div")
 
 d.className="case pos-"+i+" "+t.type
 
-d.innerHTML=t.name+"<div class='player-container'></div>"
+d.innerHTML=`
+<div class="card-title">${t.name}</div>
+${extra}
+<div class='player-container'></div>
+`
+
+/* EDITAR CARD */
+
+if(t.type==="empresa" || t.type==="companhia"){
+
+d.onclick=(e)=>{
+e.stopPropagation()
+editCard(i)
+}
+
+}
 
 board.appendChild(d)
 
 })
+
+/* EDITAR CARD */
+
+function editCard(index){
+
+const tile=tiles[index]
+const state=cardState[index]
+
+if(tile.type==="empresa"){
+
+const dono=prompt("Digite o DONO da empresa:", state.dono || "")
+if(dono===null) return
+
+const peao=prompt("Quantidade de PEÕES (funcionários):", state.peao || 0)
+if(peao===null) return
+
+state.dono=dono
+state.peao=parseInt(peao)||0
+
+}
+
+if(tile.type==="companhia"){
+
+const dono=prompt("Digite o DONO da companhia:", state.dono || "")
+if(dono===null) return
+
+state.dono=dono
+
+}
+
+updateCard(index)
+
+}
+
+/* ATUALIZAR VISUAL */
+
+function updateCard(index){
+
+const state=cardState[index]
+
+const tileEl=document.querySelector(".pos-"+index)
+
+const donoEl=tileEl.querySelector(".dono")
+
+if(donoEl){
+donoEl.innerText="DONO: "+(state.dono||"-")
+}
+
+const peaoEl=tileEl.querySelector(".peao")
+
+if(peaoEl){
+peaoEl.innerText="PEÃO: "+state.peao
+}
+
+}
 
 /* AUTO SCALE */
 
@@ -383,12 +526,14 @@ let turn=0
 
 const cards=[
 {txt:"Avance 2 casas",move:2},
-{txt:"Volte 2 casas",move:-2},
+{txt:"Volte 6 casas",move:-6},
 {txt:"Avance 3 casas",move:3},
 {txt:"Volte 3 casas",move:-3}
 ]
 
 let pendingMove=0
+
+/* ADICIONAR JOGADOR */
 
 function addPlayer(color){
 
@@ -403,9 +548,34 @@ p.className="player"
 p.style.background=color
 p.id="p"+color
 
+p.onclick=()=>removePlayer(color)
+
 document.querySelector(".pos-0 .player-container").appendChild(p)
 
 }
+
+/* REMOVER JOGADOR */
+
+function removePlayer(color){
+
+const index=players.indexOf(color)
+
+if(index==-1)return
+
+players.splice(index,1)
+pos.splice(index,1)
+
+let token=document.getElementById("p"+color)
+
+if(token)token.remove()
+
+if(turn>=players.length)turn=0
+
+updateHUD()
+
+}
+
+/* INICIAR */
 
 function startGame(){
 
@@ -417,11 +587,15 @@ updateHUD()
 
 }
 
+/* HUD */
+
 function updateHUD(){
 
 document.getElementById("hud").innerText="Jogador: "+players[turn]
 
 }
+
+/* DADO */
 
 function rollDice(){
 
@@ -455,6 +629,8 @@ stepMove()
 
 }
 
+/* MOVIMENTO */
+
 function stepMove(){
 
 if(pendingMove<=0){
@@ -467,7 +643,7 @@ return
 pos[turn]++
 pendingMove--
 
-if(pos[turn]>31)pos[turn]=31
+if(pos[turn]>31)pos[turn]=0
 
 let token=document.getElementById("p"+players[turn])
 
@@ -476,6 +652,8 @@ document.querySelector(".pos-"+pos[turn]+" .player-container").appendChild(token
 setTimeout(stepMove,300)
 
 }
+
+/* CASA */
 
 function tileAction(){
 
@@ -488,9 +666,11 @@ return
 
 }
 
-checkWin()
+nextTurn()
 
 }
+
+/* CARTAS */
 
 function drawCard(){
 
@@ -518,12 +698,16 @@ stepBack()
 
 }
 
+/* VOLTAR */
+
 function stepBack(){
 
 if(pendingMove<=0){nextTurn();return}
 
 pos[turn]--
 pendingMove--
+
+if(pos[turn]<0)pos[turn]=31
 
 let token=document.getElementById("p"+players[turn])
 
@@ -533,18 +717,7 @@ setTimeout(stepBack,300)
 
 }
 
-function checkWin(){
-
-if(pos[turn]==31){
-
-alert("🏆 "+players[turn]+" venceu!")
-location.reload()
-
-}
-
-nextTurn()
-
-}
+/* TURNO */
 
 function nextTurn(){
 
