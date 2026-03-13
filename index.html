@@ -3,754 +3,696 @@
 
 <head>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>COHABcity</title>
+    <title>COHABcity</title>
 
-<style>
+    <style>
+        :root {
+            --laranja: #d3734a;
+            --verde: #3d5a45;
+            --azul: #2c6ed5;
+            --bege: #f4e8d1;
+        }
 
-:root{
---laranja:#d3734a;
---verde:#3d5a45;
---azul:#2c6ed5;
---bege:#f4e8d1;
-}
+        body {
+            background: #fdf5e6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Segoe UI;
+            margin: 0;
+        }
 
-body{
-background:#fdf5e6;
-display:flex;
-flex-direction:column;
-align-items:center;
-font-family:Segoe UI;
-margin:0;
-}
+        /* HUD */
 
-/* HUD */
+        .hud {
+            margin: 10px;
+            padding: 10px 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+        }
 
-.hud{
-margin:10px;
-padding:10px 20px;
-background:white;
-border-radius:10px;
-box-shadow:0 5px 10px rgba(0,0,0,.2);
-}
+        /* WRAPPER */
 
-/* WRAPPER */
+        .board-wrapper {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
 
-.board-wrapper{
-width:100vw;
-height:100vh;
-display:flex;
-align-items:center;
-justify-content:center;
-overflow:hidden;
-}
+        /* TABULEIRO */
 
-/* TABULEIRO */
+        .board {
+            display: grid;
+            grid-template-columns: repeat(11, 80px);
+            grid-template-rows: repeat(7, 80px);
+            gap: 5px;
+            background: #e0d2bc;
+            padding: 10px;
+            border-radius: 10px;
+            transform-origin: center center;
+        }
 
-.board{
-display:grid;
-grid-template-columns:repeat(11,80px);
-grid-template-rows:repeat(7,80px);
-gap:5px;
-background:#e0d2bc;
-padding:10px;
-border-radius:10px;
-transform-origin:center center;
-}
+        /* CASAS */
 
-/* CASAS */
+        .case {
+            background: white;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+            text-align: center;
+            position: relative;
+            padding: 4px;
+        }
 
-.case{
-background:white;
-border-radius:4px;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:10px;
-font-weight:bold;
-text-align:center;
-position:relative;
-padding:4px;
-}
+        .empresa {
+            border-top: 8px solid var(--laranja);
+        }
 
-.empresa{border-top:8px solid var(--laranja);}
-.sorte{border-top:8px solid var(--verde);}
-.companhia{border-top:8px solid var(--azul);}
-.inicio{background:#fdfdfd;}
+        .sorte {
+            border-top: 8px solid var(--verde);
+        }
 
-/* JOGADORES */
+        .companhia {
+            border-top: 8px solid var(--azul);
+        }
 
-.player-container{
-position:absolute;
-bottom:2px;
-left:2px;
-right:2px;
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:2px;
-}
+        .inicio {
+            background: #fdfdfd;
+        }
 
-.player{
-width:16px;
-height:16px;
-border-radius:50%;
-border:2px solid white;
-}
+        /* JOGADORES NO TABULEIRO */
 
-/* CENTRO */
+        .player-container {
+            position: absolute;
+            bottom: 2px;
+            left: 2px;
+            right: 2px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+        }
 
-.center{
-grid-column:2/11;
-grid-row:2/7;
-background:var(--bege);
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-border-radius:8px;
-border:2px dashed var(--laranja);
-}
+        .player {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
 
-.logo{
-font-size:42px;
-color:var(--laranja);
-font-weight:900;
-margin-bottom:15px;
-}
+        /* CENTRO */
 
-/* DADO */
+        .center {
+            grid-column: 2/11;
+            grid-row: 2/7;
+            background: var(--bege);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            border: 2px dashed var(--laranja);
+            position: relative;
+        }
 
-.dice-container{
-perspective:600px;
-cursor:pointer;
-}
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
 
-.dice{
-width:60px;
-height:60px;
-position:relative;
-transform-style:preserve-3d;
-transition:transform 1s ease-out;
-}
+        .logo {
+            font-size: 42px;
+            color: var(--laranja);
+            font-weight: 900;
+        }
 
-.face{
-position:absolute;
-width:60px;
-height:60px;
-background:white;
-border:2px solid #ccc;
-border-radius:10px;
-display:flex;
-justify-content:center;
-align-items:center;
-font-size:24px;
-font-weight:bold;
-}
+        /* PAINEL DE CONTROLE DE JOGADORES (ESTILO CARD) */
+        .player-status-panel {
+            display: flex;
+            gap: 10px;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
 
-.front{transform:translateZ(30px);}
-.back{transform:rotateY(180deg) translateZ(30px);}
-.right{transform:rotateY(90deg) translateZ(30px);}
-.left{transform:rotateY(-90deg) translateZ(30px);}
-.top{transform:rotateX(90deg) translateZ(30px);}
-.bottom{transform:rotateX(-90deg) translateZ(30px);}
+        .player-card {
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            position: relative;
+            transition: transform 0.2s;
+        }
+        
+        .player-card:hover { transform: scale(1.1); }
+        .player-card.active { border-color: #333; }
+        .player-card.stopped { opacity: 0.5; filter: grayscale(1); }
 
-/* POSIÇÕES TABULEIRO */
+        /* MENU DE OPÇÕES DO CARD */
+        .player-options {
+            display: none;
+            position: absolute;
+            top: 40px;
+            right: 0;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            z-index: 100;
+            flex-direction: column;
+            width: 120px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
 
-.pos-0{grid-area:7/1}
-.pos-1{grid-area:6/1}
-.pos-2{grid-area:5/1}
-.pos-3{grid-area:4/1}
-.pos-4{grid-area:3/1}
-.pos-5{grid-area:2/1}
-.pos-6{grid-area:1/1}
+        .player-options button {
+            padding: 8px;
+            font-size: 11px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            text-align: left;
+        }
+        
+        .player-options button:hover { background: #eee; }
 
-.pos-7{grid-area:1/2}
-.pos-8{grid-area:1/3}
-.pos-9{grid-area:1/4}
-.pos-10{grid-area:1/5}
-.pos-11{grid-area:1/6}
-.pos-12{grid-area:1/7}
-.pos-13{grid-area:1/8}
-.pos-14{grid-area:1/9}
-.pos-15{grid-area:1/10}
-.pos-16{grid-area:1/11}
+        /* DADO */
 
-.pos-17{grid-area:2/11}
-.pos-18{grid-area:3/11}
-.pos-19{grid-area:4/11}
-.pos-20{grid-area:5/11}
-.pos-21{grid-area:6/11}
+        .dice-container {
+            perspective: 600px;
+            cursor: pointer;
+        }
 
-.pos-22{grid-area:7/11}
-.pos-23{grid-area:7/10}
-.pos-24{grid-area:7/9}
-.pos-25{grid-area:7/8}
-.pos-26{grid-area:7/7}
-.pos-27{grid-area:7/6}
-.pos-28{grid-area:7/5}
-.pos-29{grid-area:7/4}
-.pos-30{grid-area:7/3}
-.pos-31{grid-area:7/2}
+        .dice {
+            width: 60px;
+            height: 60px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 1s ease-out;
+        }
 
-/* MODAL */
+        .face {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: white;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
 
-.modal{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,.7);
-display:flex;
-align-items:center;
-justify-content:center;
-}
+        .front { transform: translateZ(30px); }
+        .back { transform: rotateY(180deg) translateZ(30px); }
+        .right { transform: rotateY(90deg) translateZ(30px); }
+        .left { transform: rotateY(-90deg) translateZ(30px); }
+        .top { transform: rotateX(90deg) translateZ(30px); }
+        .bottom { transform: rotateX(-90deg) translateZ(30px); }
 
-.modal-box{
-background:white;
-padding:30px;
-border-radius:10px;
-text-align:center;
-animation:pop .3s ease;
-}
+        /* POSIÇÕES TABULEIRO */
 
-@keyframes pop{
-0%{transform:scale(.5);opacity:0}
-100%{transform:scale(1);opacity:1}
-}
+        .pos-0 { grid-area: 7/1 }
+        .pos-1 { grid-area: 6/1 }
+        .pos-2 { grid-area: 5/1 }
+        .pos-3 { grid-area: 4/1 }
+        .pos-4 { grid-area: 3/1 }
+        .pos-5 { grid-area: 2/1 }
+        .pos-6 { grid-area: 1/1 }
+        .pos-7 { grid-area: 1/2 }
+        .pos-8 { grid-area: 1/3 }
+        .pos-9 { grid-area: 1/4 }
+        .pos-10 { grid-area: 1/5 }
+        .pos-11 { grid-area: 1/6 }
+        .pos-12 { grid-area: 1/7 }
+        .pos-13 { grid-area: 1/8 }
+        .pos-14 { grid-area: 1/9 }
+        .pos-15 { grid-area: 1/10 }
+        .pos-16 { grid-area: 1/11 }
+        .pos-17 { grid-area: 2/11 }
+        .pos-18 { grid-area: 3/11 }
+        .pos-19 { grid-area: 4/11 }
+        .pos-20 { grid-area: 5/11 }
+        .pos-21 { grid-area: 6/11 }
+        .pos-22 { grid-area: 7/11 }
+        .pos-23 { grid-area: 7/10 }
+        .pos-24 { grid-area: 7/9 }
+        .pos-25 { grid-area: 7/8 }
+        .pos-26 { grid-area: 7/7 }
+        .pos-27 { grid-area: 7/6 }
+        .pos-28 { grid-area: 7/5 }
+        .pos-29 { grid-area: 7/4 }
+        .pos-30 { grid-area: 7/3 }
+        .pos-31 { grid-area: 7/2 }
 
+        /* MODAL */
 
-/* alinhamento dentro dos cards*/
-.case{
-display:flex;
-flex-direction:column;
-align-items:flex-start;
-justify-content:flex-start;
-text-align:left;
-padding:4px;
-font-size:10px;
-font-weight:bold;
-}
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, .7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
 
-/* nome do card centralizado */
+        .modal-box {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            animation: pop .3s ease;
+        }
 
-.card-title{
-width:100%;
-text-align:center;
-font-weight:bold;
-margin-bottom:4px;
-}
+        @keyframes pop {
+            0% { transform: scale(.5); opacity: 0 }
+            100% { transform: scale(1); opacity: 1 }
+        }
 
-/* área das informações */
+        /* alinhamento dentro dos cards*/
+        .case {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+            text-align: left;
+            padding: 4px;
+            font-size: 10px;
+            font-weight: bold;
+        }
 
-.card-info{
-display:flex;
-flex-direction:column;
-align-items:flex-start;
-gap:2px;
-width:100%;
-}
+        /* nome do card centralizado */
+        .card-title {
+            width: 100%;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
 
-/* garante alinhamento esquerdo */
+        /* área das informações */
+        .card-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 2px;
+            width: 100%;
+        }
 
-.card-info div{
-text-align:left;
-width:100%;
-}
-
-</style>
+        /* garante alinhamento esquerdo */
+        .card-info div {
+            text-align: left;
+            width: 100%;
+        }
+    </style>
 
 </head>
 
 <body>
 
-<div class="board-wrapper">
-<div class="board">
-
-<div class="center">
-
-<div class="logo">COHABcity</div>
-
-<div class="dice-container" onclick="rollDice()">
-
-<div class="dice" id="dice">
-
-<div class="face front">1</div>
-<div class="face back">6</div>
-<div class="face right">3</div>
-<div class="face left">4</div>
-<div class="face top">2</div>
-<div class="face bottom">5</div>
-
-</div>
-
-</div>
-<br>
-
-<div id="result">Clique no dado</div>
-
-<div class="hud" id="hud"></div>
-
-</div>
-
-</div>
-</div>
-
-<!-- MODAL JOGADORES -->
-
-<div class="modal" id="playerModal">
-
-<div class="modal-box">
-
-<h2>Escolha jogadores</h2>
-
-<button onclick="addPlayer('red')">🔴</button>
-<button onclick="addPlayer('blue')">🔵</button>
-<button onclick="addPlayer('yellow')">🟡</button>
-<button onclick="addPlayer('black')">⚫</button>
-<button onclick="addPlayer('pink')">🩷</button>
-<button onclick="addPlayer('green')">🟢</button>
-
-<br><br>
-
-<button onclick="startGame()">Começar</button>
-
-</div>
-
-</div>
-
-<!-- MODAL CARTA -->
-
-<div class="modal" id="cardModal" style="display:none">
-
-<div class="modal-box">
-
-<h2>Sorte ou Azar</h2>
-
-<p id="cardText"></p>
-
-<button onclick="closeCard()">Continuar</button>
-
-</div>
-
-</div>
-
-<script>
-
-/* TABULEIRO COM CLASSIFICAÇÃO E VALORES */
-
-const tiles=[
-
-{name:"Início",type:"inicio"},
-
-{name:"Sorte ou Azar",type:"sorte"},
-{name:"Gráfica ASV",type:"empresa",valor:170},
-{name:"Farmácia",type:"empresa",valor:180},
-{name:"Sorte ou Azar",type:"sorte"},
-{name:"EE Sakharov",type:"empresa",valor:190},
-{name:"PM",type:"companhia",valor:500},
-{name:"Marrom",type:"empresa",valor:115},
-{name:"Padaria",type:"empresa",valor:210},
-{name:"Pizzaria",type:"empresa",valor:90},
-{name:"Correios",type:"companhia",valor:280},
-{name:"Adega",type:"empresa",valor:135},
-{name:"Sorte ou Azar",type:"sorte"},
-{name:"Feira",type:"empresa",valor:300},
-{name:"Salão",type:"empresa",valor:100},
-{name:"Lava Rápido",type:"empresa",valor:80},
-{name:"Sorte ou Azar",type:"sorte"},
-{name:"Sanatorinho",type:"empresa",valor:200},
-{name:"Paturis",type:"empresa",valor:210},
-{name:"Biqueira",type:"companhia",valor:500},
-{name:"Sorte ou Azar",type:"sorte"},
-{name:"Alphaville",type:"empresa",valor:350},
-{name:"Uber",type:"companhia",valor:310},
-{name:"BMX",type:"empresa",valor:152},
-{name:"Atacadão",type:"empresa",valor:265},
-{name:"Via Puerinha",type:"companhia",valor:270},
-{name:"Sorte ou Azar",type:"sorte"},
-{name:"Shopping",type:"empresa",valor:310},
-{name:"Estação KM21",type:"companhia",valor:295},
-{name:"Academia",type:"empresa",valor:250},
-{name:"Sorte ou Azar",type:"sorte"},
-{name:"Lotérica",type:"empresa",valor:154}
-
-]
-
-/* ESTADO DOS CARDS */
-
-const cardState = tiles.map(t=>({
-dono:"",
-peao:0
-}))
-
-const board=document.querySelector(".board")
-
-/* CRIAÇÃO DOS CARDS */
-
-tiles.forEach((t,i)=>{
-
-let extra=""
-
-if(t.type==="empresa"){
-
-extra=`
-<div class="card-info">
-<div>$ ${t.valor}</div>
-<div class="dono">DONO: -</div>
-<div class="peao">PEÃO: 0</div>
-</div>
-`
-
-}
-
-if(t.type==="companhia"){
-
-extra=`
-<div class="card-info">
-<div>$ ${t.valor}</div>
-<div class="dono">DONO: -</div>
-</div>
-`
-
-}
-
-let d=document.createElement("div")
-
-d.className="case pos-"+i+" "+t.type
-
-d.innerHTML=`
-<div class="card-title">${t.name}</div>
-${extra}
-<div class='player-container'></div>
-`
-
-/* EDITAR CARD */
-
-if(t.type==="empresa" || t.type==="companhia"){
-
-d.onclick=(e)=>{
-e.stopPropagation()
-editCard(i)
-}
-
-}
-
-board.appendChild(d)
-
-})
-
-/* EDITAR CARD */
-
-function editCard(index){
-
-const tile=tiles[index]
-const state=cardState[index]
-
-if(tile.type==="empresa"){
-
-const dono=prompt("Digite o DONO da empresa:", state.dono || "")
-if(dono===null) return
-
-const peao=prompt("Quantidade de PEÕES (funcionários):", state.peao || 0)
-if(peao===null) return
-
-state.dono=dono
-state.peao=parseInt(peao)||0
-
-}
-
-if(tile.type==="companhia"){
-
-const dono=prompt("Digite o DONO da companhia:", state.dono || "")
-if(dono===null) return
-
-state.dono=dono
-
-}
-
-updateCard(index)
-
-}
-
-/* ATUALIZAR VISUAL */
-
-function updateCard(index){
-
-const state=cardState[index]
-
-const tileEl=document.querySelector(".pos-"+index)
-
-const donoEl=tileEl.querySelector(".dono")
-
-if(donoEl){
-donoEl.innerText="DONO: "+(state.dono||"-")
-}
-
-const peaoEl=tileEl.querySelector(".peao")
-
-if(peaoEl){
-peaoEl.innerText="PEÃO: "+state.peao
-}
-
-}
-
-/* AUTO SCALE */
-
-function autoScaleBoard(){
-
-const board=document.querySelector(".board")
-
-const boardWidth=11*80+60
-const boardHeight=7*80+60
-
-const scaleX=window.innerWidth/boardWidth
-const scaleY=window.innerHeight/boardHeight
-
-const scale=Math.min(scaleX,scaleY)
-
-board.style.transform="scale("+scale+")"
-
-}
-
-window.addEventListener("load",autoScaleBoard)
-window.addEventListener("resize",autoScaleBoard)
-
-/* JOGO */
-
-let players=[]
-let pos=[]
-let turn=0
-
-const cards=[
-
-{txt:"é dia de bloquinho na Caixa D'água, a adega recebe $50 de cada jogador. SORTE"},
-{txt:"vc é usuário da biqueira, pague $100 para o traficante. AZAR"},
-{txt:"caiu um pix na sua conta mas vc não sade de quem, escolha alguém para pagar $200. SORTE"},
-{txt:"sua unha de gel quebrou, va atá o salão e faça novmente, pague $100. AZAR"},
-{txt:"ano de eleição e vc foi mesário, receba $100. SORTE"},
-{txt:"vc está com muita fome e no sabe cozinhar, escolha um comercio e pague $70. AZAR"},
-{txt:"vc foi no bingo da igreja e ganho o prêmio, receba $50. SORTE"},
-{txt:"teve jogo no campão e vc bebeu com os amigos, pague $200. AZAR"},
-{txt:"é seu aniversário e seus amigos te deram um presente, receba $100 de cada um. SORTE"},
-{txt:"café da manhã com pão na chapa, pague $50 na padaria. AZAR"},
-{txt:"seu vale refeição caiu, receba $250. SORTE"},
-{txt:"início das aulas, compre material escolar para seu filho, pague $200 AZAR"},
-{txt:"vc esta entregando ifood, receba $220. SORTE"},
-{txt:"seu pet adoeceu, os custos com veterinário foram $190. AZAR"},
-{txt:"seu time ganho na bet, receba $300. SORTE"},
-{txt:"seu carro furou o pneu , pague $80. AZAR"},
-{txt:"vc ganho no tigrinho, receba $100. SORTE"},
-{txt:"vc adoeceu e a UBS não tem a sua medicação, gaste $120 na farmácia. AZAR"},
-{txt:"vc foi ao psiquiatra e recebeu atestado, jogue novamente. SORTE"},
-{txt:"teve pagode no areião e vc não conseguiu dormir, fique 1 rodada sem jogar. AZAR"},
-{txt:"vc ganhou a liberdade, vale uma saidinha da prisão. SORTE"},
-{txt:"vc foi roubado no calçadão, pague $140. AZAR"},
-{txt:"Avance 2 casas",move:2},
-{txt:"Volte 6 casas",move:-6},
-]
-
-let pendingMove=0
-
-/* ADICIONAR JOGADOR */
-
-function addPlayer(color){
-
-if(players.includes(color))return
-if(players.length>=6)return
-
-players.push(color)
-pos.push(0)
-
-let p=document.createElement("div")
-p.className="player"
-p.style.background=color
-p.id="p"+color
-
-p.onclick=()=>removePlayer(color)
-
-document.querySelector(".pos-0 .player-container").appendChild(p)
-
-}
-
-/* REMOVER JOGADOR */
-
-function removePlayer(color){
-
-const index=players.indexOf(color)
-
-if(index==-1)return
-
-players.splice(index,1)
-pos.splice(index,1)
-
-let token=document.getElementById("p"+color)
-
-if(token)token.remove()
-
-if(turn>=players.length)turn=0
-
-updateHUD()
-
-}
-
-/* INICIAR */
-
-function startGame(){
-
-if(players.length==0)return
-
-document.getElementById("playerModal").style.display="none"
-
-updateHUD()
-
-}
-
-/* HUD */
-
-function updateHUD(){
-
-document.getElementById("hud").innerText="Jogador: "+players[turn]
-
-}
-
-/* DADO */
-
-function rollDice(){
-
-const dice=document.getElementById('dice')
-const result=Math.floor(Math.random()*6)+1
-
-const xRand=Math.floor(Math.random()*3+4)*360
-const yRand=Math.floor(Math.random()*3+4)*360
-
-let xFinal=0,yFinal=0
-
-switch(result){
-
-case 1:xFinal=0;yFinal=0;break
-case 6:xFinal=0;yFinal=180;break
-case 3:xFinal=0;yFinal=-90;break
-case 4:xFinal=0;yFinal=90;break
-case 2:xFinal=-90;yFinal=0;break
-case 5:xFinal=90;yFinal=0;break
-
-}
-
-dice.style.transform=`rotateX(${xRand+xFinal}deg) rotateY(${yRand+yFinal}deg)`
-
-setTimeout(()=>{
-
-pendingMove=result
-stepMove()
-
-},1000)
-
-}
-
-/* MOVIMENTO */
-
-function stepMove(){
-
-if(pendingMove<=0){
-
-tileAction()
-return
-
-}
-
-pos[turn]++
-pendingMove--
-
-if(pos[turn]>31)pos[turn]=0
-
-let token=document.getElementById("p"+players[turn])
-
-document.querySelector(".pos-"+pos[turn]+" .player-container").appendChild(token)
-
-setTimeout(stepMove,300)
-
-}
-
-/* CASA */
-
-function tileAction(){
-
-let tile=document.querySelector(".pos-"+pos[turn])
-
-if(tile.classList.contains("sorte")){
-
-drawCard()
-return
-
-}
-
-nextTurn()
-
-}
-
-/* CARTAS */
-
-function drawCard(){
-
-let c=cards[Math.floor(Math.random()*cards.length)]
-
-document.getElementById("cardText").innerText=c.txt
-
-document.getElementById("cardModal").style.display="flex"
-
-pendingMove=c.move
-
-}
-
-function closeCard(){
-
-document.getElementById("cardModal").style.display="none"
-
-if(pendingMove>0)stepMove()
-else if(pendingMove<0){
-
-pendingMove=Math.abs(pendingMove)
-stepBack()
-
-}else nextTurn()
-
-}
-
-/* VOLTAR */
-
-function stepBack(){
-
-if(pendingMove<=0){nextTurn();return}
-
-pos[turn]--
-pendingMove--
-
-if(pos[turn]<0)pos[turn]=31
-
-let token=document.getElementById("p"+players[turn])
-
-document.querySelector(".pos-"+pos[turn]+" .player-container").appendChild(token)
-
-setTimeout(stepBack,300)
-
-}
-
-/* TURNO */
-
-function nextTurn(){
-
-turn++
-
-if(turn>=players.length)turn=0
-
-updateHUD()
-
-}
-
-</script>
-
+    <div class="board-wrapper">
+        <div class="board">
+
+            <div class="center">
+               
+                <div class="logo-container">
+                    <div class="logo">COHABcity</div>
+                    
+                </div>
+
+                <div class="dice-container" onclick="rollDice()">
+
+                    <div class="dice" id="dice">
+                        <div class="face front">1</div>
+                        <div class="face back">6</div>
+                        <div class="face right">3</div>
+                        <div class="face left">4</div>
+                        <div class="face top">2</div>
+                        <div class="face bottom">5</div>
+                    </div>
+
+                </div>
+                <br>
+
+                <div id="result">Clique no dado</div>
+                <div class="hud" id="hud"></div>
+                <div class="player-status-panel" id="playerStatusPanel"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal" id="playerModal">
+        <div class="modal-box">
+            <h2>Escolha jogadores</h2>
+            <button onclick="addPlayer('red')">🔴</button>
+            <button onclick="addPlayer('blue')">🔵</button>
+            <button onclick="addPlayer('yellow')">🟡</button>
+            <button onclick="addPlayer('black')">⚫</button>
+            <button onclick="addPlayer('pink')">🩷</button>
+            <button onclick="addPlayer('green')">🟢</button>
+            <br><br>
+            <button onclick="startGame()">Começar</button>
+        </div>
+    </div>
+
+    <div class="modal" id="cardModal" style="display:none">
+        <div class="modal-box">
+            <h2>Sorte ou Azar</h2>
+            <p id="cardText"></p>
+            <button onclick="closeCard()">Continuar</button>
+        </div>
+    </div>
+
+    <script>
+        /* TABULEIRO COM CLASSIFICAÇÃO E VALORES */
+        const tiles = [
+            { name: "Início", type: "inicio" },
+            { name: "Sorte ou Azar", type: "sorte" },
+            { name: "Gráfica ASV", type: "empresa", valor: 170 },
+            { name: "Farmácia", type: "empresa", valor: 180 },
+            { name: "Sorte ou Azar", type: "sorte" },
+            { name: "EE Sakharov", type: "empresa", valor: 190 },
+            { name: "PM", type: "companhia", valor: 500 },
+            { name: "Marrom", type: "empresa", valor: 115 },
+            { name: "Padaria", type: "empresa", valor: 210 },
+            { name: "Pizzaria", type: "empresa", valor: 90 },
+            { name: "Correios", type: "companhia", valor: 280 },
+            { name: "Adega", type: "empresa", valor: 135 },
+            { name: "Sorte ou Azar", type: "sorte" },
+            { name: "Feira", type: "empresa", valor: 300 },
+            { name: "Salão", type: "empresa", valor: 100 },
+            { name: "Lava Rápido", type: "empresa", valor: 80 },
+            { name: "Sorte ou Azar", type: "sorte" },
+            { name: "Sanatorinho", type: "empresa", valor: 200 },
+            { name: "Paturis", type: "empresa", valor: 210 },
+            { name: "Biqueira", type: "companhia", valor: 500 },
+            { name: "Sorte ou Azar", type: "sorte" },
+            { name: "Alphaville", type: "empresa", valor: 350 },
+            { name: "Uber", type: "companhia", valor: 310 },
+            { name: "BMX", type: "empresa", valor: 152 },
+            { name: "Atacadão", type: "empresa", valor: 265 },
+            { name: "Via Puerinha", type: "companhia", valor: 270 },
+            { name: "Sorte ou Azar", type: "sorte" },
+            { name: "Shopping", type: "empresa", valor: 310 },
+            { name: "Estação KM21", type: "companhia", valor: 295 },
+            { name: "Academia", type: "empresa", valor: 250 },
+            { name: "Sorte ou Azar", type: "sorte" },
+            { name: "Lotérica", type: "empresa", valor: 154 }
+        ]
+
+        /* ESTADO DOS CARDS DO TABULEIRO */
+        const cardState = tiles.map(t => ({
+            dono: "",
+            peao: 0
+        }))
+
+        const board = document.querySelector(".board")
+
+        /* CRIAÇÃO DOS CARDS */
+        tiles.forEach((t, i) => {
+            let extra = ""
+            if (t.type === "empresa") {
+                extra = `
+                <div class="card-info">
+                    <div>$ ${t.valor}</div>
+                    <div class="dono">DONO: -</div>
+                    <div class="peao">PEÃO: 0</div>
+                </div>`
+            }
+            if (t.type === "companhia") {
+                extra = `
+                <div class="card-info">
+                    <div>$ ${t.valor}</div>
+                    <div class="dono">DONO: -</div>
+                </div>`
+            }
+            let d = document.createElement("div")
+            d.className = "case pos-" + i + " " + t.type
+            d.innerHTML = `<div class="card-title">${t.name}</div>${extra}<div class='player-container'></div>`
+
+            if (t.type === "empresa" || t.type === "companhia") {
+                d.onclick = (e) => {
+                    e.stopPropagation()
+                    editCard(i)
+                }
+            }
+            board.appendChild(d)
+        })
+
+        function editCard(index) {
+            const tile = tiles[index]
+            const state = cardState[index]
+            if (tile.type === "empresa") {
+                const dono = prompt("Digite o DONO da empresa:", state.dono || "")
+                if (dono === null) return
+                const peao = prompt("Quantidade de PEÕES (funcionários):", state.peao || 0)
+                if (peao === null) return
+                state.dono = dono
+                state.peao = parseInt(peao) || 0
+            }
+            if (tile.type === "companhia") {
+                const dono = prompt("Digite o DONO da companhia:", state.dono || "")
+                if (dono === null) return
+                state.dono = dono
+            }
+            updateCard(index)
+        }
+
+        function updateCard(index) {
+            const state = cardState[index]
+            const tileEl = document.querySelector(".pos-" + index)
+            const donoEl = tileEl.querySelector(".dono")
+            if (donoEl) donoEl.innerText = "DONO: " + (state.dono || "-")
+            const peaoEl = tileEl.querySelector(".peao")
+            if (peaoEl) peaoEl.innerText = "PEÃO: " + state.peao
+        }
+
+        function autoScaleBoard() {
+            const board = document.querySelector(".board")
+            const boardWidth = 11 * 80 + 60
+            const boardHeight = 7 * 80 + 60
+            const scaleX = window.innerWidth / boardWidth
+            const scaleY = window.innerHeight / boardHeight
+            const scale = Math.min(scaleX, scaleY)
+            board.style.transform = "scale(" + scale + ")"
+        }
+
+        window.addEventListener("load", autoScaleBoard)
+        window.addEventListener("resize", autoScaleBoard)
+
+        /* LOGICA DO JOGO */
+        let players = [] // Cores dos jogadores
+        let pos = [] // Posições
+        let playerStatus = [] // 'active', 'stopped', 'removed'
+        let turn = 0
+        let pendingMove = 0
+
+        const cards = [
+            { txt: "é dia de bloquinho na caixa D'água, a adega recebe $50 de cada jogador. SORTE" },
+            { txt: "vc é usuário de drogas, pague $100 para o traficante da biqueira. AZAR" },
+            { txt: "caiu um pix na sua conta mas vc não sade de quem, escolha alguém para lhe pagar $200. SORTE" },
+            { txt: "sua unha de gel quebrou, va atá o salão e faça novmente, pague $100. AZAR" },
+            { txt: "ano de eleição e vc foi mesário, receba $100. SORTE" },
+            { txt: "vc está com muita fome e não sabe cozinhar, escolha onde comer e pague $70. AZAR" },
+            { txt: "vc foi no bingo da igreja e ganhou o prêmio, receba $50. SORTE" },
+            { txt: "teve jogo no campão e vc bebeu com os amigos, pague $200. AZAR" },
+            { txt: "é seu aniversário e seus amigos te deram um presente, receba $100 de cada um. SORTE" },
+            { txt: "café da manhã com pão na chapa, pague $50 na padaria. AZAR" },
+            { txt: "seu vale refeição caiu, receba $250. SORTE" },
+            { txt: "início das aulas, compre material escolar para seu filho, pague $200 AZAR" },
+            { txt: "vc esta entregando ifood, receba $220. SORTE" },
+            { txt: "seu pet adoeceu, os custos com veterinário foram $190. AZAR" },
+            { txt: "seu time ganho na bet, receba $300. SORTE" },
+            { txt: "seu carro furou o pneu , pague $80. AZAR" },
+            { txt: "vc ganho no tigrinho, receba $100. SORTE" },
+            { txt: "vc adoeceu e a UBS não tem a sua medicação, gaste $120 na farmácia. AZAR" },
+            { txt: "vc foi ao psiquiatra e recebeu atestado, receba 100 do sanatorinho. SORTE" },
+            { txt: "teve pagode no areião e vc não conseguiu dormir, fique 1 rodada sem jogar. AZAR" },
+            { txt: "vc ganhou a liberdade, vale uma saidinha da prisão. SORTE" },
+            { txt: "vc foi roubado no calçadão, pague $140. AZAR" },
+            { txt: "Avance 2 casas", move: 2 },
+            { txt: "Volte 6 casas", move: -6 },
+        ]
+
+        function addPlayer(color) {
+            if (players.includes(color)) return
+            if (players.length >= 6) return
+            players.push(color)
+            pos.push(0)
+            playerStatus.push('active')
+
+            let p = document.createElement("div")
+            p.className = "player"
+            p.style.background = color
+            p.id = "p" + color
+            document.querySelector(".pos-0 .player-container").appendChild(p)
+            updatePlayerPanel()
+        }
+
+        function updatePlayerPanel() {
+            const panel = document.getElementById("playerStatusPanel")
+            panel.innerHTML = ""
+            players.forEach((color, i) => {
+                if (playerStatus[i] === 'removed') return
+
+                const card = document.createElement("div")
+                card.className = `player-card ${playerStatus[i]}`
+                card.style.backgroundColor = color
+                card.onclick = (e) => {
+                    e.stopPropagation()
+                    const menu = card.querySelector(".player-options")
+                    const allMenus = document.querySelectorAll(".player-options")
+                    allMenus.forEach(m => { if(m !== menu) m.style.display = "none" })
+                    menu.style.display = menu.style.display === "flex" ? "none" : "flex"
+                }
+
+                card.innerHTML = `
+                    <div class="player-options">
+                        <button onclick="setPlayerStatus(${i}, 'active')">Iniciar Jogador</button>
+                        <button onclick="setPlayerStatus(${i}, 'stopped')">Parar Jogador</button>
+                        <button onclick="setPlayerStatus(${i}, 'removed')">Remover Jogador</button>
+                    </div>
+                `
+                panel.appendChild(card)
+            })
+        }
+
+        function setPlayerStatus(index, status) {
+            playerStatus[index] = status
+            if (status === 'removed') {
+                const token = document.getElementById("p" + players[index])
+                if (token) token.remove()
+            }
+            updatePlayerPanel()
+            // Se o jogador da vez foi parado ou removido, passa a vez
+            if ((status === 'stopped' || status === 'removed') && turn === index) {
+                nextTurn()
+            }
+        }
+
+        // Fecha menus ao clicar fora
+        window.onclick = () => {
+            document.querySelectorAll(".player-options").forEach(m => m.style.display = "none")
+        }
+
+        function startGame() {
+            if (players.length == 0) return
+            document.getElementById("playerModal").style.display = "none"
+            updateHUD()
+        }
+
+        function updateHUD() {
+            document.getElementById("hud").innerText = "Jogador: " + players[turn]
+            document.querySelectorAll(".player-card").forEach((c, i) => {
+                c.classList.toggle("active", i === turn)
+            })
+        }
+
+        function rollDice() {
+            // Verifica se o jogador atual pode jogar
+            if (playerStatus[turn] !== 'active') {
+                nextTurn()
+                return
+            }
+
+            const dice = document.getElementById('dice')
+            const result = Math.floor(Math.random() * 6) + 1
+            const xRand = Math.floor(Math.random() * 3 + 4) * 360
+            const yRand = Math.floor(Math.random() * 3 + 4) * 360
+            let xFinal = 0, yFinal = 0
+
+            switch (result) {
+                case 1: xFinal = 0; yFinal = 0; break
+                case 6: xFinal = 0; yFinal = 180; break
+                case 3: xFinal = 0; yFinal = -90; break
+                case 4: xFinal = 0; yFinal = 90; break
+                case 2: xFinal = -90; yFinal = 0; break
+                case 5: xFinal = 90; yFinal = 0; break
+            }
+            dice.style.transform = `rotateX(${xRand + xFinal}deg) rotateY(${yRand + yFinal}deg)`
+            setTimeout(() => {
+                pendingMove = result
+                stepMove()
+            }, 1000)
+        }
+
+        function stepMove() {
+            if (pendingMove <= 0) {
+                tileAction()
+                return
+            }
+            pos[turn]++
+            pendingMove--
+            if (pos[turn] > 31) pos[turn] = 0
+            let token = document.getElementById("p" + players[turn])
+            document.querySelector(".pos-" + pos[turn] + " .player-container").appendChild(token)
+            setTimeout(stepMove, 300)
+        }
+
+        function tileAction() {
+            let tile = document.querySelector(".pos-" + pos[turn])
+            if (tile.classList.contains("sorte")) {
+                drawCard()
+                return
+            }
+            nextTurn()
+        }
+
+        function drawCard() {
+            let c = cards[Math.floor(Math.random() * cards.length)]
+            document.getElementById("cardText").innerText = c.txt
+            document.getElementById("cardModal").style.display = "flex"
+            pendingMove = c.move
+        }
+
+        function closeCard() {
+            document.getElementById("cardModal").style.display = "none"
+            if (pendingMove > 0) stepMove()
+            else if (pendingMove < 0) {
+                pendingMove = Math.abs(pendingMove)
+                stepBack()
+            } else nextTurn()
+        }
+
+        function stepBack() {
+            if (pendingMove <= 0) { nextTurn(); return }
+            pos[turn]--
+            pendingMove--
+            if (pos[turn] < 0) pos[turn] = 31
+            let token = document.getElementById("p" + players[turn])
+            document.querySelector(".pos-" + pos[turn] + " .player-container").appendChild(token)
+            setTimeout(stepBack, 300)
+        }
+
+        function nextTurn() {
+            let attempts = 0
+            do {
+                turn++
+                if (turn >= players.length) turn = 0
+                attempts++
+                // Se der a volta em todos e ninguém puder jogar, para.
+                if (attempts > players.length) break 
+            } while (playerStatus[turn] !== 'active')
+
+            updateHUD()
+        }
+    </script>
 </body>
 </html>
