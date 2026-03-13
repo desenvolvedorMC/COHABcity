@@ -1,0 +1,215 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Banco</title>
+
+<style>
+
+body{
+font-family: Arial, Helvetica, sans-serif;
+background:#f2f2f2;
+display:flex;
+flex-direction:column;
+align-items:center;
+padding:30px;
+}
+
+/* TOTAL */
+
+.total{
+font-size:32px;
+font-weight:bold;
+margin-bottom:25px;
+background:white;
+padding:15px 30px;
+border-radius:10px;
+box-shadow:0 5px 10px rgba(0,0,0,0.1);
+}
+
+/* CARD */
+
+.cedula{
+width:420px;
+height:200px;
+border-radius:12px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:0;
+margin:10px 0;
+background:white;
+box-shadow:0 6px 12px rgba(0,0,0,0.15);
+overflow:hidden;
+position:relative;
+}
+
+/* imagem da nota */
+
+.nota-img{
+width:100%;
+height:100%;
+object-fit:cover;
+position:absolute;
+left:0;
+top:0;
+}
+
+/* valor */
+
+.valor, .controle{
+position:relative;
+z-index:2;
+}
+
+
+/* controle */
+
+.controle{
+display:flex;
+align-items:center;
+gap:12px;
+}
+
+/* botões */
+
+button{
+width:40px;
+height:40px;
+border:none;
+border-radius:8px;
+font-size:20px;
+font-weight:bold;
+cursor:pointer;
+background:#2c6ed5;
+color:white;
+}
+
+button:hover{
+background:#1f4ea0;
+}
+
+/* quantidade */
+
+.qtd{
+font-size:22px;
+min-width:40px;
+text-align:center;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="total">
+Total: R$ <span id="total">0</span>
+</div>
+
+<div id="container"></div>
+
+<script>
+
+/* notas e imagens */
+
+const notas = [
+{valor:2, img:"2conto.png"},
+{valor:5, img:"5conto.png"},
+{valor:10, img:"10conto.png"},
+{valor:20, img:"20conto.png"},
+{valor:50, img:"50conto.png"},
+{valor:100, img:"100conto.png"},
+{valor:200, img:"200conto.png"}
+]
+
+const container = document.getElementById("container")
+const totalEl = document.getElementById("total")
+
+function atualizarTotal(){
+
+let total = 0
+
+document.querySelectorAll(".cedula").forEach(card=>{
+
+const valor = Number(card.dataset.valor)
+const qtd = Number(card.querySelector(".qtd").innerText)
+
+total += valor * qtd
+
+})
+
+totalEl.innerText = total
+
+}
+
+notas.forEach(nota=>{
+
+const card = document.createElement("div")
+card.className = "cedula"
+card.dataset.valor = nota.valor
+
+/* imagem */
+
+const img = document.createElement("img")
+img.src = nota.img
+img.className = "nota-img"
+
+/* valor */
+
+const valor = document.createElement("div")
+valor.className = "valor"
+valor.innerText = "R$ " + nota.valor
+
+/* controle */
+
+const controle = document.createElement("div")
+controle.className = "controle"
+
+const menos = document.createElement("button")
+menos.innerText = "-"
+
+const qtd = document.createElement("div")
+qtd.className = "qtd"
+qtd.innerText = "0"
+
+const mais = document.createElement("button")
+mais.innerText = "+"
+
+menos.onclick = ()=>{
+let v = Number(qtd.innerText)
+if(v>0){
+v--
+qtd.innerText = v
+atualizarTotal()
+}
+}
+
+mais.onclick = ()=>{
+let v = Number(qtd.innerText)
+v++
+qtd.innerText = v
+atualizarTotal()
+}
+
+controle.appendChild(menos)
+controle.appendChild(qtd)
+controle.appendChild(mais)
+
+card.appendChild(img)
+card.appendChild(valor)
+card.appendChild(controle)
+
+container.appendChild(card)
+
+})
+
+</script>
+
+</body>
+</html>
